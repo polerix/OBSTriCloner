@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OBSTriCloner — Broadcast Control Surface</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ── Title bar ─────────────────────────────────────────────────────── -->
+  <div id="titlebar">
+    <span class="logo">▶ OBSTriCloner</span>
+    <span class="subtitle">TriCaster-style broadcast control for OBS</span>
+    <div id="obs-status">
+      <div id="obs-indicator"></div>
+      <span id="obs-status-text">Connecting…</span>
+    </div>
+  </div>
+
+  <!-- ── Main area ──────────────────────────────────────────────────────── -->
+  <div id="main-area">
+
+    <!-- Left: monitors + input bus -->
+    <div id="left-panel">
+
+      <!-- Preview | Transition controls | Program monitors -->
+      <div id="monitors-row">
+
+        <!-- Preview -->
+        <div class="monitor-block">
+          <div class="monitor-label preview-label">PREVIEW</div>
+          <div id="preview-monitor" class="monitor-screen preview-active">
+            <span id="preview-name">—</span>
+          </div>
+          <!-- DSK buttons below preview -->
+          <div id="dsk-row">
+            <button class="dsk-btn" data-dsk="DSK1" id="dsk1-btn" onclick="UI.toggleDSK('DSK1')">DSK 1</button>
+            <button class="dsk-btn" data-dsk="DSK2" id="dsk2-btn" onclick="UI.toggleDSK('DSK2')">DSK 2</button>
+            <button class="dsk-btn" id="chroma-btn" onclick="UI.openChromaKey()">⚙ Key</button>
+          </div>
+        </div>
+
+        <!-- Transition controls -->
+        <div id="transition-controls">
+          <div class="tc-label">TRANSITION</div>
+
+          <button class="trans-btn cut-btn" onclick="UI.cut()">✂ CUT</button>
+          <button class="trans-btn auto-btn" id="auto-btn" onclick="UI.auto()">AUTO ▶</button>
+
+          <div id="tbar-container">
+            <div id="tbar-label">T-BAR</div>
+            <div id="tbar-track">
+              <div id="tbar-handle">▓</div>
+            </div>
+          </div>
+
+          <select id="trans-type-select" onchange="UI.setTransitionType(this.value)">
+            <option value="Fade">Fade</option>
+            <option value="Cut">Cut</option>
+            <option value="Swipe">Swipe</option>
+            <option value="Slide">Slide</option>
+            <option value="Stinger">Stinger</option>
+            <option value="Fade to Black">Fade to Black</option>
+            <option value="Luma Wipe">Luma Wipe</option>
+          </select>
+
+          <div id="trans-duration">
+            <input type="number" id="trans-ms" value="500" min="0" max="5000" step="50"
+                   onchange="UI.setTransitionDuration(parseInt(this.value))">
+            <span>ms</span>
+          </div>
+        </div>
+
+        <!-- Program -->
+        <div class="monitor-block">
+          <div class="monitor-label program-label">PROGRAM — ON AIR</div>
+          <div id="program-monitor" class="monitor-screen program-active">
+            <div class="on-air-badge">ON AIR</div>
+            <span id="program-name">—</span>
+          </div>
+          <!-- Record / Stream status -->
+          <div style="display:flex;gap:6px;padding:0 0;">
+            <div class="monitor-label" id="rec-badge" style="flex:1;background:#444;color:#ccc;border-radius:3px;font-size:9px;padding:3px 0;text-align:center;">● REC OFF</div>
+            <div class="monitor-label" id="str-badge" style="flex:1;background:#444;color:#ccc;border-radius:3px;font-size:9px;padding:3px 0;text-align:center;">▶ STREAM OFF</div>
+          </div>
+        </div>
+
+      </div><!-- /monitors-row -->
+
+      <!-- Input bus — camera / source buttons -->
+      <div id="input-bus">
+        <!-- populated by client.js -->
+      </div>
+
+    </div><!-- /left-panel -->
+
+    <!-- Right: audio mixer -->
+    <div id="right-panel">
+      <div id="right-panel-header">AUDIO MIXER</div>
+      <div id="audio-mixer">
+        <!-- populated by client.js -->
+      </div>
+    </div>
+
+  </div><!-- /main-area -->
+
+  <!-- ── Playlist panel ─────────────────────────────────────────────────── -->
+  <div id="playlist-panel">
+
+    <div id="playlist-controls">
+      <div class="pl-header">PLAYLIST</div>
+      <div class="pl-transport">
+        <button class="pl-btn" onclick="UI.playlistPrev()" title="Previous">⏮</button>
+        <button class="pl-btn" onclick="UI.playlistNext()" title="Next">⏭</button>
+        <button class="pl-btn full is-active" id="pl-play-btn" onclick="UI.playlistPlayStop()">▶ PLAY</button>
+      </div>
+      <label class="pl-loop-row">
+        <input type="checkbox" id="pl-loop" onchange="UI.setLoop(this.checked)"> Loop
+      </label>
+      <button class="pl-btn full" onclick="UI.scheduleAll()" style="margin-top:4px;">⏰ Sched All</button>
+    </div>
+
+    <div id="playlist-queue">
+      <!-- populated by client.js -->
+    </div>
+
+  </div>
+
+  <!-- ── Status bar ──────────────────────────────────────────────────────── -->
+  <div id="statusbar">
+    <div class="sb-item">Transition: <span class="sb-val" id="sb-trans">Fade</span></div>
+    <div class="sb-item">Duration: <span class="sb-val" id="sb-dur">500ms</span></div>
+    <div class="sb-item">DSK1: <span class="sb-val" id="sb-dsk1">OFF</span></div>
+    <div class="sb-item">Playlist: <span class="sb-val" id="sb-playlist">Idle</span></div>
+    <div id="clock">--:--:--</div>
+  </div>
+
+</div><!-- /app -->
+
+<script src="client.js"></script>
+</body>
+</html>
