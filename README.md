@@ -2,6 +2,40 @@
 
 A TriCaster PRO-style broadcast control daemon for OBS Studio. Gives OBS a professional switcher workflow: multi-camera preview/program bus, T-bar transitions, DSK/chroma key management, audio mixer, and scheduled playlist — all controllable from a dark broadcast-style web UI or via TCP automation (TXTerp/OTV-ARPS compatible).
 
+## Quick Start
+
+```bash
+# 1. Install Node.js 18+ from https://nodejs.org/
+
+# 2. Run the installer (first time or re-run to reconfigure)
+bash install.sh          # macOS / Linux
+install.bat              # Windows
+
+# — or — run setup directly if npm install already done:
+npm run setup
+
+# 3. Follow the prompts (OBS password, scene mapping)
+
+# 4. Start the daemon
+npm start
+
+# 5. Open the control surface
+open http://localhost:9090
+```
+
+**Pre-flight check only** (no writes, safe to run anytime):
+```bash
+npm run check
+```
+
+> **New to OBSTriCloner?** The setup wizard will:
+> - Detect your OBS installation and WebSocket settings
+> - Hash and write a secure password to OBS's `global.ini`
+> - Save your password to `.env` (and encrypt a local backup in `.env.enc`)
+> - Discover your OBS scenes and auto-populate the input mapping
+
+---
+
 ## Architecture
 
 ```
@@ -21,7 +55,9 @@ ui/style.css             Dark broadcast UI
 ui/client.js             WebSocket client
 ```
 
-## Quick Start
+## Manual Setup (alternative to the wizard)
+
+If you prefer to configure manually instead of using `npm run setup`:
 
 ### 1. OBS Setup (required)
 
@@ -34,7 +70,7 @@ In OBS Studio:
 ### 2. Install & Configure
 
 ```bash
-cd /Volumes/Clay/GitHub/OBSTriCloner
+cd /path/to/OBSTriCloner
 npm install
 cp .env.example .env
 # Edit .env — set OBS_PASSWORD and scene names to match your OBS setup
