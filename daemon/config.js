@@ -28,13 +28,13 @@ module.exports = {
   // Keys are TriCaster input labels; values are OBS scene names.
   // Edit these to match your OBS scene collection.
   inputs: {
-    CAM1:  process.env.INPUT_CAM1  || 'Camera 1',
+    CAM1:  process.env.INPUT_CAM1  || 'Camera 01',
     CAM2:  process.env.INPUT_CAM2  || 'Camera 2',
     CAM3:  process.env.INPUT_CAM3  || 'Camera 3',
     CAM4:  process.env.INPUT_CAM4  || 'Camera 4',
-    BG:    process.env.INPUT_BG    || 'Background',
+    BG:    process.env.INPUT_BG    || 'background-UI',
     BLACK: process.env.INPUT_BLACK || 'Black',
-    CLIP1: process.env.INPUT_CLIP1 || 'Clip 1',
+    CLIP1: process.env.INPUT_CLIP1 || 'ARPS331',
     CLIP2: process.env.INPUT_CLIP2 || 'Clip 2',
   },
 
@@ -61,7 +61,7 @@ module.exports = {
   audio: {
     sources: [
       { id: 'pgm',    label: 'Program',    obsName: process.env.AUDIO_PGM    || 'Program Audio'   },
-      { id: 'mic1',   label: 'Mic 1',      obsName: process.env.AUDIO_MIC1   || 'Microphone 1'    },
+      { id: 'mic1',   label: 'Mic 1',      obsName: process.env.AUDIO_MIC1   || 'Mic/Aux'    },
       { id: 'mic2',   label: 'Mic 2',      obsName: process.env.AUDIO_MIC2   || 'Microphone 2'    },
       { id: 'music',  label: 'Music',      obsName: process.env.AUDIO_MUSIC  || 'Music'           },
       { id: 'fx',     label: 'FX',         obsName: process.env.AUDIO_FX     || 'Sound Effects'   },
