@@ -69,6 +69,19 @@ module.exports = {
     ],
   },
 
+  // ── ARPS ↔ OTV bridge ────────────────────────────────────────────────────
+  // Enables the HTTP/SSE bridge at /api/arps/ for OTV (On-The-Video) integration.
+  arps: {
+    enabled:   process.env.ARPS_ENABLED !== 'false',
+    // Allowed CORS origin for OTV browser. '*' permits any origin.
+    otvOrigin: process.env.ARPS_OTV_ORIGIN || '*',
+    // JSON map of OTV cassette/slot labels → OBS scene names.
+    // Example: ARPS_SCENE_MAP='{"Die Hard":"Movie-Scene","Station ID":"BrandBumper"}'
+    sceneMap: (() => {
+      try { return JSON.parse(process.env.ARPS_SCENE_MAP || '{}'); } catch (_) { return {}; }
+    })(),
+  },
+
   // ── Default transition settings ────────────────────────────────────────────
   transition: {
     name:         process.env.TRANSITION_NAME     || 'Fade',

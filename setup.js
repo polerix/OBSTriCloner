@@ -513,6 +513,63 @@ async function runFullSetup() {
   }
 
   separator();
+
+  // ── 10. ARPS ↔ OTV bridge setup ───────────────────────────────────────────
+  log(chalk.bold('ARPS ↔ OTV Integration (On-The-Video)'));
+  log('OTV is a browser-based cassette/scheduler UI. This bridge lets OTV');
+  log('trigger OBS scene switches and receive live on-air state from OBSTriCloner.');
+  log('');
+
+  const { arpsEnabled } = await prompt([{
+    type: 'confirm', name: 'arpsEnabled',
+    message: 'Enable ARPS ↔ OTV bridge?',
+    default: true,
+  }]);
+
+  if (arpsEnabled) {
+    const { arpsHost, arpsPort, arpsOtvPort } = await prompt([
+      {
+        type: 'input', name: 'arpsHost',
+        message: 'Host where OBSTriCloner is reachable FROM the OTV browser:',
+        default: 'localhost',
+      },
+      {
+        type: 'input', name: 'arpsPort',
+        message: 'OBSTriCloner daemon port (ARPS endpoint lives here):',
+        default: '9090',
+      },
+      {
+        type: 'input', name: 'arpsOtvPort',
+        message: 'OTV web server port (for CORS — enter * to allow all origins):',
+        default: '*',
+      },
+    ]);
+
+    const otvOrigin = arpsOtvPort === '*' ? '*' : `http://${arpsHost}:${arpsOtvPort}`;
+    writeEnvFile({
+      ARPS_ENABLED:    'true',
+      ARPS_HOST:       arpsHost,
+      ARPS_PORT:       arpsPort,
+      ARPS_OTV_PORT:   arpsOtvPort,
+      ARPS_OTV_ORIGIN: otvOrigin,
+      ARPS_SCENE_MAP:  '{}',
+    });
+
+    ok('ARPS bridge enabled');
+    info(`OTV should connect to: http://${arpsHost}:${arpsPort}/api/arps/`);
+    info('Add this to OTV\'s index.html (before </body>):');
+    log('');
+    log(chalk.cyan(`  <script>window.OTC_HOST = 'http://${arpsHost}:${arpsPort}';</script>`));
+    log(chalk.cyan('  <script src="js/obstricloner-client.js"></script>'));
+    log('');
+    info('Edit ARPS_SCENE_MAP in .env to map OTV cassette labels → OBS scene names.');
+    info('Example: ARPS_SCENE_MAP=\'{"Die Hard":"Movie-Scene","Station ID":"Bumper"}\'');
+  } else {
+    writeEnvFile({ ARPS_ENABLED: 'false' });
+    ok('ARPS bridge disabled');
+  }
+
+  separator();
   ok('Setup complete!');
   log('');
   log(`  Run ${chalk.cyan('npm start')} to start the OBSTriCloner daemon`);

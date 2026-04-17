@@ -26,6 +26,7 @@ const dsk       = require('./dsk-manager');
 const playlist  = require('./playlist-engine');
 const mixer     = require('./audio-mixer');
 const teletext  = require('./teletext-bridge');
+const arps      = require('./arps-bridge');
 
 // ── Express app ───────────────────────────────────────────────────────────
 
@@ -237,11 +238,15 @@ server.listen(PORT, () => {
   console.log(`║  HTTP:      http://localhost:${PORT}     ║`);
   console.log(`║  WebSocket: ws://localhost:${PORT}/ws    ║`);
   console.log(`║  Teletext:  TCP port ${config.teletext.port}             ║`);
+  console.log(`║  ARPS/OTV:  /api/arps/ (SSE + HTTP)  ║`);
   console.log(`╚═══════════════════════════════════════╝\n`);
 
   // Start TCP automation bridge
   teletext.registerHandlers(bus, dsk, playlist, mixer);
   teletext.start();
+
+  // Start ARPS ↔ OTV HTTP/SSE bridge
+  arps.registerHandlers(app, bus, dsk, playlist, mixer, broadcast);
 
   // Connect to OBS
   obs.connect();
