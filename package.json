@@ -20,7 +20,7 @@
     "inquirer": "^8.2.6",
     "node-machine-id": "^1.1.12",
     "obs-websocket-js": "^5.0.6",
-    "ws": "^8.17.1"
+    "ws": "^8.21.3"
   },
   "engines": {
     "node": ">=18.0.0"
